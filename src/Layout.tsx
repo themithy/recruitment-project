@@ -9,7 +9,9 @@ import {
 
 interface LayoutProps {
   currencyInput: React.ReactNode
+  dateSlider: React.ReactNode
   ratesTable: React.ReactNode
+  title: string
 }
 
 const LayoutComponent = styled.div`
@@ -31,13 +33,18 @@ export const Layout: React.FC<LayoutProps> = (props) => {
           <Typography.Title
             level={1}
             style={{ margin: 0 }}
-            children="Currency converter"
+            children={props.title}
           />
         </Col>
         <Col
           xs={{ span: 24 }}
           md={{ span: 16, offset: 4 }}
           children={props.currencyInput}
+        />
+        <Col
+          xs={{ span: 24 }}
+          md={{ span: 16, offset: 4 }}
+          children={props.dateSlider}
         />
         <Col
           xs={{ span: 24 }}

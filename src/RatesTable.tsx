@@ -5,12 +5,13 @@ import {
   Table,
 } from 'antd'
 
+import { getUrl } from './api'
+
 interface RatesTableProps {
   amount: number
   currency: string
+  day: number
 }
-
-const API_URL = 'https://api.exchangeratesapi.io'
 
 const columns = [
   {
@@ -33,16 +34,12 @@ export const RatesTable: React.FC<RatesTableProps> = (props) => {
   React.useEffect(() => {
     setLoading(true)
 
-    axios.get(`${API_URL}/latest?base=${props.currency}`)
+    axios.get(getUrl(props.currency, props.day))
       .then(({ data }) => {
         setRates(data.rates)
         setLoading(false)
       })
-  }, [ props.currency ])
-
-  if (!props.amount) {
-    return null
-  }
+  }, [ props.currency, props.day ])
 
   const dataSource = Object.keys(rates)
     .filter(currency => currency !== props.currency)
