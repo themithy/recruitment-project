@@ -1,6 +1,8 @@
 
 import React from 'react'
 import axios from 'axios'
+import { useQuery } from 'react-query'
+import { get } from 'lodash'
 import {
   Table,
 } from 'antd'
@@ -28,18 +30,15 @@ const columns = [
 ]
 
 export const RatesTable: React.FC<RatesTableProps> = (props) => {
-  const [ loading, setLoading ] = React.useState(true)
-  const [ rates, setRates ] = React.useState<{ [key: string]: number }>({})
+  const query = useQuery({
+    queryKey: ['rates', props.currency, props.day],
+    queryFn: () => axios.get(getUrl(props.currency, props.day)),
+    config: {
+      cacheTime: Infinity,
+    },
+  })
 
-  React.useEffect(() => {
-    setLoading(true)
-
-    axios.get(getUrl(props.currency, props.day))
-      .then(({ data }) => {
-        setRates(data.rates)
-        setLoading(false)
-      })
-  }, [ props.currency, props.day ])
+  const rates = get(query, 'data.data.rates', {})
 
   const dataSource = Object.keys(rates)
     .filter(currency => currency !== props.currency)
@@ -56,7 +55,7 @@ export const RatesTable: React.FC<RatesTableProps> = (props) => {
       // @ts-ignore
       columns={columns}
       dataSource={dataSource}
-      loading={loading}
+      loading={query.isLoading}
       pagination={false}
       size="small"
     />
