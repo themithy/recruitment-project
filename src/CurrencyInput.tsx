@@ -1,17 +1,19 @@
 
 import React from 'react'
-import {
-  Input,
-  Select,
-} from 'antd'
+import { atom, useRecoilState } from 'recoil'
+import { Input } from 'antd'
 
 interface CurrencyInputProps {
-  amount: number
   select: React.ReactNode
-  onChange: (value: number) => void
 }
 
+export const amountState = atom<number>({
+  key: 'amount',
+  default: 0,
+})
+
 export const CurrencyInput: React.FC<CurrencyInputProps> = (props) => {
+  const [ amount, setAmount ] = useRecoilState(amountState)
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = Number.parseFloat(event.target.value)
@@ -20,10 +22,10 @@ export const CurrencyInput: React.FC<CurrencyInputProps> = (props) => {
       ? 0
       : rawValue
 
-    props.onChange(value)
+    setAmount(value)
   }
 
-  const value = props.amount !== 0 ? String(props.amount) : ''
+  const value = amount !== 0 ? String(amount) : ''
 
   return (
     <Input

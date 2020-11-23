@@ -1,13 +1,15 @@
 
 import React from 'react'
+import { atom, useRecoilState } from 'recoil'
 import dateFormat from 'dateformat'
-import {
-  Slider,
-} from 'antd'
+import { Slider } from 'antd'
+
+export const dateState = atom<number>({
+  key: 'date',
+  default: 0,
+})
 
 interface DateSliderProps {
-  day: number
-  onChange: (value: number) => void
 }
 
 function tipFormatter(day?: number): string {
@@ -22,14 +24,15 @@ function tipFormatter(day?: number): string {
 }
 
 export const DateSlider: React.FC<DateSliderProps> = (props) => {
+  const [ day, setDay ] = useRecoilState(dateState)
 
   return (
     <Slider
-      value={props.day}
+      value={day}
       max={30}
       reverse
       tipFormatter={tipFormatter}
-      onChange={props.onChange}
+      onChange={setDay}
     />
   )
 }

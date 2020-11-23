@@ -19,6 +19,7 @@
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
     "react-query": "^2.25.2",
+    "recoil": "^0.1.2",
     "styled-components": "^5.2.0"
   },
   "devDependencies": {

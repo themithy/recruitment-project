@@ -1,21 +1,24 @@
 
 import React from 'react'
-import {
-  Input,
-  Select,
-} from 'antd'
+import { atom, useRecoilState } from 'recoil'
+import { Select } from 'antd'
 
 interface CurrencySelectProps {
-  value: string
   allowedValues: string[]
-  onChange: (currency: string) => void
 }
 
+export const currencyState = atom<string>({
+  key: 'currency',
+  default: 'PLN',
+})
+
 export const CurrencySelect: React.FC<CurrencySelectProps> = (props) => {
+  const [ baseCurrency, setCurrency ] = useRecoilState(currencyState)
+
   return (
     <Select
-      value={props.value}
-      onChange={props.onChange}
+      value={baseCurrency}
+      onChange={(value) => setCurrency(value)}
     >
       { props.allowedValues.map(currency => (
         <Select.Option

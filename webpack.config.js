@@ -1,4 +1,3 @@
-
 const path = require('path')
 const webpack = require('webpack')
 const html = require('html-webpack-plugin')
@@ -45,7 +44,8 @@ module.exports = {
     new html({
       meta: {
         charset: 'utf-8',
-      }
+      },
+      title: 'Currency converter',
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development'),
@@ -56,5 +56,4 @@ module.exports = {
     host: '0.0.0.0',
     port: 8080,
   }
-};
-
+}

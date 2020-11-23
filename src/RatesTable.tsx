@@ -1,21 +1,20 @@
 
 import React from 'react'
 import { useQuery } from 'react-query'
+import { useRecoilState } from 'recoil'
 import { get } from 'lodash'
-import {
-  Table,
-} from 'antd'
+import { Table } from 'antd'
 
 import {
   getRatesData,
   RatesData,
 } from './api'
+import { amountState } from './CurrencyInput'
+import { currencyState } from './CurrencySelect'
+import { dateState } from './DateSlider'
 
 interface RatesTableProps {
-  amount: number
-  baseCurrency: string
   preferredCurrencies: Array<string>
-  day: number
 }
 
 const columns = [
@@ -33,9 +32,13 @@ const columns = [
 ]
 
 export const RatesTable: React.FC<RatesTableProps> = (props) => {
+  const [ amount ] = useRecoilState(amountState)
+  const [ baseCurrency ] = useRecoilState(currencyState)
+  const [ day ] = useRecoilState(dateState)
+
   const query = useQuery<RatesData>({
-    queryKey: ['rates', props.baseCurrency, props.day],
-    queryFn: () => getRatesData(props.baseCurrency, props.day),
+    queryKey: ['rates', baseCurrency, day],
+    queryFn: () => getRatesData(baseCurrency, day),
     config: {
       staleTime: Infinity,
       cacheTime: Infinity,
@@ -45,25 +48,21 @@ export const RatesTable: React.FC<RatesTableProps> = (props) => {
 
   const { data: queryData } = query
 
-  const baseCurrency = queryData
+  const currentBaseCurrency = queryData
     ? queryData.base
-    : props.baseCurrency
+    : baseCurrency
 
   const dataSource = props.preferredCurrencies
-    .filter(currency => currency !== baseCurrency)
+    .filter(currency => currency !== currentBaseCurrency)
     .map((currency, i) => {
       const rate = queryData
-        ? queryData.rates[currency]
-        : 0
-
-      const amount = rate
-        ? props.amount * rate
+        ? queryData.rates[currency] as number
         : 0
 
       return {
         key: i,
         currency: currency,
-        amount: amount.toFixed(2),
+        amount: (amount * rate).toFixed(2),
       }
     })
 
