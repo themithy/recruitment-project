@@ -10,8 +10,8 @@ interface DateSliderProps {
   onChange: (value: number) => void
 }
 
-function tipFormatter(day: number): string {
-  if (day === 0) {
+function tipFormatter(day?: number): string {
+  if (!day) {
     return 'Today'
   }
 

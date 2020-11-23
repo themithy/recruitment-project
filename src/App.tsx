@@ -38,8 +38,9 @@ export const App: React.FC = () => {
   const ratesTable = (
     <RatesTable
       amount={amount}
-      currency={currency}
+      baseCurrency={currency}
       day={day}
+      preferredCurrencies={[ 'PLN', 'USD', 'EUR', 'CHF', 'CZK', 'JPY', 'DKK' ]}
     />
   )
 
